@@ -22,3 +22,9 @@ export interface ProjectConfig {
   packageManager: Manager
   dependencies: Dependency[]
 }
+
+export interface GeneratedFile {
+  name: string
+  content: string
+  language: Language
+}
