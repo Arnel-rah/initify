@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Boxes, Github, Layers, Package, Eye } from 'lucide-react'
+import { Boxes, GitBranch, Layers, Package, Eye } from 'lucide-react'
 import { useInitializer } from './hooks/useInitializer'
 import { generateFiles } from './utils/generateCode'
 import FrameworkSelector from './components/FrameworkSelector'
@@ -46,7 +46,7 @@ export default function App() {
             rel="noopener noreferrer"
             className="btn btn-ghost btn-xs gap-1.5"
           >
-            <Github size={13} />
+            <GitBranch size={13} />
             GitHub
           </a>
         </div>
