@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Boxes, Github, Layers, Package, Eye } from 'lucide-react'
+import { Boxes, GitBranch, Layers, Package, Eye } from 'lucide-react'
 import { useInitializer } from './hooks/useInitializer'
 import { generateFiles } from './utils/generateCode'
 import FrameworkSelector from './components/FrameworkSelector'
@@ -24,7 +24,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-base-100 font-mono flex flex-col">
-      {/* Header */}
       <header className="navbar bg-base-200 border-b border-base-300 px-6 min-h-[52px] sticky top-0 z-50">
         <div className="navbar-start gap-2">
           <div className="bg-primary rounded-lg p-1.5">
@@ -41,12 +40,12 @@ export default function App() {
             Frontend project scaffolder
           </span>
           <a
-            href="https://github.com"
+            href="https://github.com/Arnel-rah/initify.git"
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-ghost btn-xs gap-1.5"
           >
-            <Github size={13} />
+            <GitBranch size={13} />
             GitHub
           </a>
         </div>
