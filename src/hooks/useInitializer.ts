@@ -36,7 +36,6 @@ export function useInitializer() {
         return { ...prev, dependencies: prev.dependencies.filter(d => d.id !== dep.id) }
       }
 
-      // Check incompatibilities
       const hasConflict = dep.incompatibleWith?.some(id =>
         prev.dependencies.some(d => d.id === id)
       )
