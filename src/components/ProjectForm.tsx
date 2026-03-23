@@ -34,8 +34,6 @@ export default function ProjectForm({ config, onChange }: Props) {
             Project
           </h2>
         </div>
-
-        {/* Name */}
         <label className="form-control w-full">
           <div className="label pb-1">
             <span className="label-text text-xs text-base-content/50 uppercase tracking-wider">
@@ -50,8 +48,6 @@ export default function ProjectForm({ config, onChange }: Props) {
             placeholder="my-app"
           />
         </label>
-
-        {/* Language */}
         <div>
           <p className="text-xs text-base-content/50 uppercase tracking-wider mb-2">Language</p>
           <div className="flex gap-2">
@@ -70,8 +66,6 @@ export default function ProjectForm({ config, onChange }: Props) {
             ))}
           </div>
         </div>
-
-        {/* Styling */}
         <div>
           <p className="text-xs text-base-content/50 uppercase tracking-wider mb-2">Styling</p>
           <div className="grid grid-cols-2 gap-2">
@@ -90,8 +84,6 @@ export default function ProjectForm({ config, onChange }: Props) {
             ))}
           </div>
         </div>
-
-        {/* Package Manager */}
         <div>
           <p className="text-xs text-base-content/50 uppercase tracking-wider mb-2">
             Package Manager
