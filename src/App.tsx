@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { GitBranch, Layers, Package, Eye, Terminal } from 'lucide-react'
+import { GitBranch, Layers, Package, Eye, Terminal, Loader2 } from 'lucide-react'
 import { useInitializer } from './hooks/useInitializer'
 import { generateFiles } from './utils/generateCode'
 import FrameworkSelector from './components/FrameworkSelector'
@@ -9,8 +9,26 @@ import PreviewPanel from './components/PreviewPanel'
 import GenerateButton from './components/GenerateButton'
 
 export default function App() {
-  const { config, setField, setFramework, toggleDependency, isDependencySelected, isConflicted, isFrameworkCompatible } = useInitializer()
-  const files = useMemo(() => generateFiles(config), [config])
+  const {
+    config,
+    setField,
+    setFramework,
+    toggleDependency,
+    isDependencySelected,
+    isConflicted,
+    isFrameworkCompatible
+  } = useInitializer()
+
+  const files = useMemo(() => (config ? generateFiles(config) : []), [config])
+
+  if (!config) {
+    return (
+      <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f7f6f3' }}>
+        <Loader2 className="animate-spin" size={24} color="#1a1916" />
+      </div>
+    )
+  }
+
   const depCount = config.dependencies.length
 
   return (
@@ -32,7 +50,6 @@ export default function App() {
 
       <div style={{ minHeight: '100vh', background: '#f7f6f3', display: 'flex', flexDirection: 'column', fontFamily: "'DM Mono', 'Geist Mono', monospace" }}>
 
-        {/* Header */}
         <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', height: 52, background: '#ffffff', borderBottom: '1px solid #e8e6e1', position: 'sticky', top: 0, zIndex: 50, flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{ width: 28, height: 28, borderRadius: 7, background: '#1a1916', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -47,7 +64,7 @@ export default function App() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            {(['#f97176', '#f4d23c', '#63bb5b'] as string[]).map((c, i) => (
+            {['#f97176', '#f4d23c', '#63bb5b'].map((c, i) => (
               <div key={i} style={{ width: 9, height: 9, borderRadius: '50%', background: c, opacity: 0.7 }} />
             ))}
           </div>
@@ -61,10 +78,8 @@ export default function App() {
           </div>
         </header>
 
-        {/* Body */}
         <div style={{ display: 'flex', flex: 1, height: 'calc(100vh - 52px)', overflow: 'hidden' }}>
 
-          {/* Left sidebar */}
           <aside className="app-scroll fade-up" style={{ width: 288, flexShrink: 0, borderRight: '1px solid #e8e6e1', background: '#ffffff', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 20, padding: '20px 16px', animationDelay: '0.05s', opacity: 0 }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 14 }}>
@@ -88,7 +103,6 @@ export default function App() {
             </div>
           </aside>
 
-          {/* Main */}
           <main className="app-scroll fade-up" style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 16, padding: '20px', background: '#f7f6f3', animationDelay: '0.12s', opacity: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <Package size={11} style={{ color: '#c4c0b8' }} />
@@ -100,7 +114,6 @@ export default function App() {
             <DependencyPicker isSelected={isDependencySelected} isConflicted={isConflicted} isCompatible={isFrameworkCompatible} onToggle={toggleDependency} />
           </main>
 
-          {/* Right sidebar */}
           <aside className="fade-up" style={{ width: 380, flexShrink: 0, borderLeft: '1px solid #e8e6e1', background: '#ffffff', display: 'flex', flexDirection: 'column', overflow: 'hidden', animationDelay: '0.18s', opacity: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '14px 20px', borderBottom: '1px solid #f0ede8', flexShrink: 0 }}>
               <Eye size={11} style={{ color: '#c4c0b8' }} />
