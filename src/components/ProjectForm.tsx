@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Settings } from 'lucide-react'
 import type { ProjectConfig, Language, Styling, Manager } from '../types/type'
 
@@ -10,98 +11,72 @@ const LANGUAGES: { value: Language; label: string }[] = [
   { value: 'typescript', label: 'TypeScript' },
   { value: 'javascript', label: 'JavaScript' },
 ]
-
 const STYLINGS: { value: Styling; label: string }[] = [
-  { value: 'tailwind', label: 'Tailwind CSS' },
-  { value: 'scss', label: 'SCSS' },
-  { value: 'css-modules', label: 'CSS Modules' },
-  { value: 'styled-components', label: 'Styled Components' },
+  { value: 'tailwind',          label: 'Tailwind CSS' },
+  { value: 'scss',              label: 'SCSS' },
+  { value: 'css-modules',       label: 'CSS Modules' },
+  { value: 'styled-components', label: 'Styled Comp.' },
 ]
-
 const MANAGERS: { value: Manager; label: string }[] = [
   { value: 'pnpm', label: 'pnpm' },
-  { value: 'npm', label: 'npm' },
+  { value: 'npm',  label: 'npm'  },
   { value: 'yarn', label: 'yarn' },
 ]
 
-export default function ProjectForm({ config, onChange }: Props) {
+function OptionBtn({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
+  const [hov, setHov] = useState(false)
   return (
-    <div className="card bg-base-200 border border-base-300 shadow-sm">
-      <div className="card-body p-5 gap-5">
-        <div className="flex items-center gap-2">
-          <Settings size={15} className="text-primary" />
-          <h2 className="font-bold text-sm tracking-wide uppercase text-base-content/60">
-            Project
-          </h2>
+    <button onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      style={{ flex: 1, padding: '7px 10px', borderRadius: 6, border: active ? '1px solid #1a1916' : hov ? '1px solid #c4c0b8' : '1px solid #e8e6e1', background: active ? '#1a1916' : hov ? '#f7f6f3' : '#ffffff', fontFamily: "'DM Mono', monospace", fontSize: 11, letterSpacing: '0.05em', color: active ? '#f7f6f3' : hov ? '#1a1916' : '#9a9690', cursor: 'pointer', transition: 'all 0.15s ease', outline: 'none' }}>
+      {label}
+    </button>
+  )
+}
+
+function Label({ children }: { children: React.ReactNode }) {
+  return <p style={{ margin: '0 0 7px', fontFamily: "'DM Mono', monospace", fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#c4c0b8' }}>{children}</p>
+}
+
+export default function ProjectForm({ config, onChange }: Props) {
+  const [focused, setFocused] = useState(false)
+  return (
+    <div style={{ background: '#ffffff', border: '1px solid #e8e6e1', borderRadius: 10, overflow: 'hidden' }}>
+      <div style={{ height: 1, background: 'linear-gradient(to right, transparent, #e8e6e1, transparent)' }} />
+      <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+          <Settings size={11} style={{ color: '#c4c0b8' }} />
+          <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#c4c0b8' }}>Config</span>
         </div>
-        <label className="form-control w-full">
-          <div className="label pb-1">
-            <span className="label-text text-xs text-base-content/50 uppercase tracking-wider">
-              Name
-            </span>
-          </div>
-          <input
-            type="text"
-            className="input input-sm input-bordered w-full font-mono bg-base-300 focus:input-primary"
-            value={config.name}
-            onChange={e => onChange('name', e.target.value.replace(/\s+/g, '-').toLowerCase())}
-            placeholder="my-app"
-          />
-        </label>
+
         <div>
-          <p className="text-xs text-base-content/50 uppercase tracking-wider mb-2">Language</p>
-          <div className="flex gap-2">
-            {LANGUAGES.map(lang => (
-              <button
-                key={lang.value}
-                onClick={() => onChange('language', lang.value)}
-                className={`btn btn-sm flex-1 font-mono ${
-                  config.language === lang.value
-                    ? 'btn-primary'
-                    : 'btn-ghost border border-base-300'
-                }`}
-              >
-                {lang.label}
-              </button>
-            ))}
+          <Label>Name</Label>
+          <div style={{ position: 'relative' }}>
+            <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', fontFamily: "'DM Mono', monospace", fontSize: 11, color: focused ? '#1a1916' : '#c4c0b8', pointerEvents: 'none', transition: 'color 0.2s' }}>~/</span>
+            <input type="text" value={config.name} onChange={e => onChange('name', e.target.value.replace(/\s+/g, '-').toLowerCase())}
+              onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} placeholder="my-app"
+              style={{ width: '100%', background: '#f7f6f3', border: focused ? '1px solid #1a1916' : '1px solid #e8e6e1', borderRadius: 6, padding: '8px 12px 8px 30px', fontFamily: "'DM Mono', monospace", fontSize: 11, color: '#1a1916', outline: 'none', transition: 'border-color 0.2s', boxSizing: 'border-box' }} />
           </div>
         </div>
+
         <div>
-          <p className="text-xs text-base-content/50 uppercase tracking-wider mb-2">Styling</p>
-          <div className="grid grid-cols-2 gap-2">
-            {STYLINGS.map(s => (
-              <button
-                key={s.value}
-                onClick={() => onChange('styling', s.value)}
-                className={`btn btn-xs font-mono justify-start ${
-                  config.styling === s.value
-                    ? 'btn-primary'
-                    : 'btn-ghost border border-base-300'
-                }`}
-              >
-                {s.label}
-              </button>
-            ))}
+          <Label>Language</Label>
+          <div style={{ display: 'flex', gap: 6 }}>
+            {LANGUAGES.map(l => <OptionBtn key={l.value} active={config.language === l.value} label={l.label} onClick={() => onChange('language', l.value)} />)}
           </div>
         </div>
+
         <div>
-          <p className="text-xs text-base-content/50 uppercase tracking-wider mb-2">
-            Package Manager
-          </p>
-          <div className="flex gap-2">
-            {MANAGERS.map(m => (
-              <button
-                key={m.value}
-                onClick={() => onChange('packageManager', m.value)}
-                className={`btn btn-sm flex-1 font-mono ${
-                  config.packageManager === m.value
-                    ? 'btn-primary'
-                    : 'btn-ghost border border-base-300'
-                }`}
-              >
-                {m.label}
-              </button>
-            ))}
+          <Label>Styling</Label>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+            {STYLINGS.map(s => <OptionBtn key={s.value} active={config.styling === s.value} label={s.label} onClick={() => onChange('styling', s.value)} />)}
+          </div>
+        </div>
+
+        <div>
+          <Label>Package Manager</Label>
+          <div style={{ display: 'flex', gap: 6 }}>
+            {MANAGERS.map(m => <OptionBtn key={m.value} active={config.packageManager === m.value} label={m.label} onClick={() => onChange('packageManager', m.value)} />)}
           </div>
         </div>
       </div>
