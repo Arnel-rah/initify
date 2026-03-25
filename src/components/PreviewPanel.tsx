@@ -1,76 +1,209 @@
-import { useState } from 'react'
-import { FileText } from 'lucide-react'
-import type { GeneratedFile } from '../types/type'
+import { ChevronRight, FileText } from "lucide-react";
+import { useState } from "react";
+import type { GeneratedFile } from "../types/type";
 
-interface Props { files: GeneratedFile[] }
+interface Props {
+  files: GeneratedFile[];
+}
 
 const LANG_COLORS: Record<string, string> = {
-  json: '#f4a23c', typescript: '#4d90d5', javascript: '#f4d23c',
-  markdown: '#42b883', bash: '#9099a1', css: '#ec8fe6', html: '#f97176',
-}
-const LANG_LABEL: Record<string, string> = {
-  json: 'JSON', typescript: 'TS', javascript: 'JS',
-  markdown: 'MD', bash: 'SH', css: 'CSS', html: 'HTML',
-}
+  json: "#f4a23c",
+  typescript: "#4d90d5",
+  javascript: "#f4d23c",
+  markdown: "#42b883",
+  bash: "#9099a1",
+  css: "#ec8fe6",
+  html: "#f97176",
+};
 
 export default function PreviewPanel({ files }: Props) {
-  const [active, setActive] = useState(0)
-  const [hov, setHov]       = useState<number | null>(null)
-  const cur = files[active]
+  const [active, setActive] = useState(0);
+  const [hov, setHov] = useState<number | null>(null);
+  const cur = files[active];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        background: "#fcfcfb",
+        borderRadius: 12,
+        overflow: "hidden",
+        border: "1px solid #f0ede8",
+      }}
+    >
       <style>{`
-        .prev-scroll::-webkit-scrollbar { width: 3px; height: 3px; }
-        .prev-scroll::-webkit-scrollbar-track { background: transparent; }
-        .prev-scroll::-webkit-scrollbar-thumb { background: #d4d0c8; border-radius: 2px; }
+        .prev-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+        .prev-scroll::-webkit-scrollbar-thumb { background: #e8e6e1; border-radius: 10px; }
+        .code-line:hover { background: rgba(0,0,0,0.02); }
+        .tab-transition { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
       `}</style>
 
-      {/* Tabs */}
-      <div className="prev-scroll" style={{ display: 'flex', overflowX: 'auto', flexShrink: 0, borderBottom: '1px solid #f0ede8', background: '#fafaf8' }}>
+      <div
+        className="prev-scroll"
+        style={{
+          display: "flex",
+          overflowX: "auto",
+          flexShrink: 0,
+          background: "#f5f5f3",
+          borderBottom: "1px solid #f0ede8",
+          padding: "0 8px",
+        }}
+      >
         {files.map((f, i) => {
-          const isAct = active === i
-          const isH   = hov === i
-          const lc    = LANG_COLORS[f.language] ?? '#9099a1'
+          const isAct = active === i;
+          const lc = LANG_COLORS[f.language] ?? "#9099a1";
           return (
-            <button key={f.name} onClick={() => setActive(i)} onMouseEnter={() => setHov(i)} onMouseLeave={() => setHov(null)}
-              style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 14px', flexShrink: 0, whiteSpace: 'nowrap', fontFamily: "'DM Mono', monospace", fontSize: 10, letterSpacing: '0.05em', cursor: 'pointer', background: isAct ? '#ffffff' : isH ? '#f7f6f3' : 'transparent', borderRight: '1px solid #f0ede8', borderBottom: isAct ? '2px solid #1a1916' : '2px solid transparent', color: isAct ? '#1a1916' : '#9a9690', border: 'none', outline: 'none', transition: 'all 0.15s', marginBottom: isAct ? -1 : 0 }}>
-              <span style={{ width: 5, height: 5, borderRadius: '50%', background: lc, flexShrink: 0, opacity: isAct ? 1 : 0.5 }} />
+            <button
+              key={f.name}
+              onClick={() => setActive(i)}
+              onMouseEnter={() => setHov(i)}
+              onMouseLeave={() => setHov(null)}
+              className="tab-transition"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "12px 16px",
+                position: "relative",
+                cursor: "pointer",
+                border: "none",
+                outline: "none",
+                background: isAct ? "#fcfcfb" : "transparent",
+                color: isAct ? "#1a1916" : "#9a9690",
+                fontSize: 11,
+                fontWeight: isAct ? 600 : 400,
+                borderLeft: "1px solid transparent",
+                borderRight: "1px solid transparent",
+                borderColor: isAct ? "#f0ede8" : "transparent",
+              }}
+            >
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: lc,
+                }}
+              />
               {f.name}
+              {isAct && (
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: -1,
+                    left: 0,
+                    right: 0,
+                    height: 2,
+                    background: "#1a1916",
+                  }}
+                />
+              )}
             </button>
-          )
+          );
         })}
       </div>
 
-      {/* Code */}
       {cur ? (
-        <div className="prev-scroll" style={{ flex: 1, overflowY: 'auto', overflowX: 'auto', background: '#fafaf8', minHeight: 0 }}>
-          <pre style={{ margin: 0, padding: '18px 20px', fontFamily: "'DM Mono', 'Geist Mono', monospace", fontSize: 11, lineHeight: 1.8, color: '#4a4740', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+        <div
+          className="prev-scroll"
+          style={{
+            flex: 1,
+            overflow: "auto",
+            background: "#fcfcfb",
+            display: "flex",
+          }}
+        >
+          {" "}
+          <div
+            style={{
+              padding: "20px 12px",
+              background: "#f8f8f6",
+              borderRight: "1px solid #f0ede8",
+              textAlign: "right",
+              userSelect: "none",
+            }}
+          >
+            {cur.content.split("\n").map((_, i) => (
+              <div
+                key={i}
+                style={{
+                  fontSize: 10,
+                  color: "#d4d0c8",
+                  fontFamily: "'DM Mono', monospace",
+                  lineHeight: 1.8,
+                }}
+              >
+                {i + 1}
+              </div>
+            ))}
+          </div>
+          <pre
+            style={{
+              margin: 0,
+              padding: "20px",
+              fontFamily: "'Geist Mono', 'DM Mono', monospace",
+              fontSize: 12,
+              lineHeight: 1.8,
+              color: "#333",
+              flex: 1,
+            }}
+          >
             <code>{cur.content}</code>
           </pre>
         </div>
       ) : (
-        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fafaf8' }}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ width: 44, height: 44, borderRadius: '50%', border: '1px solid #e8e6e1', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 10px', background: '#f7f6f3' }}>
-              <FileText size={18} style={{ color: '#c4c0b8' }} />
-            </div>
-            <p style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, letterSpacing: '0.1em', color: '#c4c0b8', textTransform: 'uppercase', margin: 0 }}>Configure to preview</p>
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 16,
+          }}
+        >
+          <div
+            style={{
+              padding: 20,
+              borderRadius: "50%",
+              background: "#f5f5f3",
+              color: "#c4c0b8",
+            }}
+          >
+            <FileText size={32} strokeWidth={1} />
           </div>
+          <p
+            style={{ fontSize: 12, color: "#9a9690", letterSpacing: "0.05em" }}
+          >
+            En attente de configuration...
+          </p>
         </div>
       )}
 
-      {/* Footer */}
       {cur && (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '7px 16px', borderTop: '1px solid #f0ede8', background: '#fafaf8', flexShrink: 0 }}>
-          <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 8, letterSpacing: '0.15em', textTransform: 'uppercase', padding: '2px 7px', borderRadius: 3, background: `${LANG_COLORS[cur.language] ?? '#9099a1'}15`, border: `1px solid ${LANG_COLORS[cur.language] ?? '#9099a1'}25`, color: LANG_COLORS[cur.language] ?? '#9099a1' }}>
-            {LANG_LABEL[cur.language] ?? cur.language}
-          </span>
-          <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, color: '#c4c0b8', letterSpacing: '0.05em' }}>
-            {cur.content.split('\n').length} lines
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "8px 16px",
+            borderTop: "1px solid #f0ede8",
+            background: "#f5f5f3",
+            fontSize: 10,
+            color: "#9a9690",
+          }}
+        >
+          <span>src</span>
+          <ChevronRight size={10} />
+          <span style={{ color: "#1a1916", fontWeight: 500 }}>{cur.name}</span>
+          <div style={{ flex: 1 }} />
+          <span style={{ fontFamily: "'DM Mono', monospace", opacity: 0.7 }}>
+            UTF-8 • {cur.language.toUpperCase()}
           </span>
         </div>
       )}
     </div>
-  )
+  );
 }
