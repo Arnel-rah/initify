@@ -4,10 +4,10 @@ import type { Framework } from '../types/type'
 interface Props { selected: Framework; onChange: (f: Framework) => void }
 
 const FRAMEWORKS: { value: Framework; label: string; description: string; badge?: string; color: string }[] = [
-  { value: 'react',  label: 'React',   description: 'UI library',        badge: 'Vite',       color: '#61dafb' },
+  { value: 'react',  label: 'React',   description: 'Library UI',        badge: 'Vite',       color: '#61dafb' },
   { value: 'nextjs', label: 'Next.js', description: 'Full-stack React',  badge: 'App Router', color: '#000000' },
-  { value: 'vue',    label: 'Vue',     description: 'Progressive fw',    badge: 'Vite',       color: '#42b883' },
-  { value: 'nuxt',   label: 'Nuxt',   description: 'Full-stack Vue',    badge: 'v3',         color: '#00dc82' },
+  { value: 'vue',    label: 'Vue',     description: 'Progressive FW',    badge: 'Vite',       color: '#42b883' },
+  { value: 'nuxt',   label: 'Nuxt',    description: 'Full-stack Vue',    badge: 'v3',         color: '#00dc82' },
 ]
 
 function ReactLogo() {
@@ -27,24 +27,64 @@ const LOGOS: Record<Framework, React.ReactNode> = { react: <ReactLogo />, nextjs
 
 export default function FrameworkSelector({ selected, onChange }: Props) {
   const [hov, setHov] = useState<Framework | null>(null)
+
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+      <style>{`
+        .fw-card { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        .fw-card:hover:not(.active) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .fw-card.active { transform: scale(0.98); }
+      `}</style>
+
       {FRAMEWORKS.map(fw => {
         const isActive = selected === fw.value
         const isHov = hov === fw.value
+
         return (
-          <button key={fw.value} onClick={() => onChange(fw.value)} onMouseEnter={() => setHov(fw.value)} onMouseLeave={() => setHov(null)}
-            style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8, padding: '12px', borderRadius: 8, border: isActive ? '1px solid #1a1916' : isHov ? '1px solid #c4c0b8' : '1px solid #e8e6e1', background: isActive ? '#1a1916' : isHov ? '#f7f6f3' : '#ffffff', cursor: 'pointer', textAlign: 'left', transition: 'all 0.18s ease', outline: 'none' }}>
-            {isActive && <span style={{ position: 'absolute', top: 8, right: 8, width: 6, height: 6, borderRadius: '50%', background: '#f7f6f3' }} />}
-            <div style={{ opacity: isActive ? 0.9 : isHov ? 0.8 : 0.5, transition: 'opacity 0.18s', filter: isActive ? 'brightness(0) invert(1)' : 'none' }}>
+          <button
+            key={fw.value}
+            onClick={() => onChange(fw.value)}
+            onMouseEnter={() => setHov(fw.value)}
+            onMouseLeave={() => setHov(null)}
+            className={`fw-card ${isActive ? 'active' : ''}`}
+            style={{
+              position: 'relative', display: 'flex', flexDirection: 'column', gap: 12, padding: '16px',
+              borderRadius: 14, border: '1.5px solid',
+              borderColor: isActive ? '#1a1916' : isHov ? '#d4d0c8' : '#eee',
+              background: isActive ? '#1a1916' : 'white',
+              cursor: 'pointer', textAlign: 'left', outline: 'none'
+            }}
+          >
+            <div style={{
+              width: 40, height: 40, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: isActive ? 'rgba(255,255,255,0.1)' : '#f8f9fa',
+              transition: 'all 0.2s',
+              filter: isActive ? 'brightness(0) invert(1)' : 'none'
+            }}>
               {LOGOS[fw.value]}
             </div>
-            <div>
-              <p style={{ margin: 0, fontFamily: "'DM Mono', monospace", fontSize: 11, fontWeight: 600, letterSpacing: '0.05em', color: isActive ? '#f7f6f3' : '#1a1916' }}>{fw.label}</p>
-              <p style={{ margin: '2px 0 0', fontFamily: "'DM Mono', monospace", fontSize: 9, color: isActive ? 'rgba(247,246,243,0.5)' : '#c4c0b8' }}>{fw.description}</p>
+
+            <div style={{ flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                <span style={{ fontSize: 13, fontWeight: 700, color: isActive ? 'white' : '#1a1916' }}>
+                  {fw.label}
+                </span>
+                {isActive && (
+                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: fw.color, boxShadow: `0 0 8px ${fw.color}` }} />
+                )}
+              </div>
+              <p style={{ fontSize: 11, margin: 0, color: isActive ? 'rgba(255,255,255,0.6)' : '#999', lineHeight: 1.4 }}>
+                {fw.description}
+              </p>
             </div>
+
             {fw.badge && (
-              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 8, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '2px 6px', borderRadius: 3, background: isActive ? 'rgba(247,246,243,0.1)' : '#f0ede8', border: isActive ? '1px solid rgba(247,246,243,0.2)' : '1px solid #e8e6e1', color: isActive ? 'rgba(247,246,243,0.6)' : '#9a9690' }}>
+              <span style={{
+                alignSelf: 'flex-start', fontSize: 9, fontWeight: 600, textTransform: 'uppercase',
+                padding: '3px 8px', borderRadius: 6,
+                background: isActive ? 'rgba(255,255,255,0.15)' : '#f1f1f1',
+                color: isActive ? 'white' : '#777'
+              }}>
                 {fw.badge}
               </span>
             )}
