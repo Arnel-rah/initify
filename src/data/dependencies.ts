@@ -86,7 +86,6 @@ export const ALL_DEPENDENCIES: Dependency[] = [
     category: 'state',
     frameworks: ['vue', 'nuxt'],
   },
-  // Routing
   {
     id: 'react-router',
     name: 'react-router-dom',
