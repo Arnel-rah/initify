@@ -1,6 +1,5 @@
-import { useState, useRef, useEffect, useMemo } from 'react'
-import { Search, Check, AlertTriangle, Ban, X, Package, ChevronRight } from 'lucide-react'
-import type { Dependency } from '../types/type'
+import { useState, useRef, useMemo } from 'react'
+import { Search, Check, AlertTriangle, Ban, ChevronRight } from 'lucide-react'
 import { ALL_DEPENDENCIES, CATEGORIES } from '../data/dependencies'
 
 const THEME = {
